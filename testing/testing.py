@@ -56,4 +56,4 @@ class TestImpl(object):
         else:
             self.tests_output.append((False, f"Assertion failed"))
 
-test = testing.TestImpl()
+test = TestImpl()
