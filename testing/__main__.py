@@ -47,4 +47,13 @@ class TestImpl(object):
         else:
             self.tests_output.append((False, f"Failed: {value} is not equal to {reference}"))
 
+    def true(self, prop):
+        if self.tests_output is None:
+            raise Exception("Why are you calling test.true outside a test function?")
+
+        if value:
+            self.tests_output.append((True, "Passed"))
+        else:
+            self.tests_output.append((False, f"Assertion failed"))
+
 test = TestImpl()
