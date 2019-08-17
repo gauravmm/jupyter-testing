@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="jupyter-testing",
-    version="0.0.1",
+    version="0.0.2",
     author="Gaurav Manek",
     author_email="gaurav@gauravmanek.com",
     description="Testing in Jupyter Notebooks",
