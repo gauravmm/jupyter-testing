@@ -38,22 +38,34 @@ class TestImpl(object):
         self.tests_output = None
         return func
 
-    def equal(self, value, reference):
+    def check_scope(self):
         if self.tests_output is None:
             raise Exception("Why are you calling test.equals outside a test function?")
 
+    def equal(self, value, reference):
+        self.check_scope()
         if value == reference:
             self.tests_output.append((True, "Passed"))
         else:
             self.tests_output.append((False, f"Failed: {value} is not equal to {reference}"))
 
     def true(self, prop):
-        if self.tests_output is None:
-            raise Exception("Why are you calling test.true outside a test function?")
-
+        self.check_scope()
         if prop:
             self.tests_output.append((True, "Passed"))
         else:
             self.tests_output.append((False, f"Assertion failed"))
+
+    def exception(self, lmbd, excpt=Exception):
+        self.check_scope()
+        try:
+            lmbd()
+        except Exception as e:
+            if isinstance(e, excpt):
+                self.tests_output.append((True, "Passed"))
+            else:
+                self.tests_output.append((False, f"Exception type {e}, not subclass of {excpt}"))
+            return
+        self.tests_output.append((False, f"No exception thrown."))
 
 test = TestImpl()
