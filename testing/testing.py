@@ -1,8 +1,6 @@
 import inspect
 import os
 
-__all__ = [ "test" ]
-
 class TestImpl(object):
     def __init__(self):
         self.tests_output = None
@@ -58,4 +56,4 @@ class TestImpl(object):
         else:
             self.tests_output.append((False, f"Assertion failed"))
 
-test = TestImpl()
+test = testing.TestImpl()
