@@ -1,5 +1,26 @@
 import inspect
 import os
+import time
+
+try:
+    import numpy as np
+except NameError:
+    np = None
+
+class StackedTimer(object):
+    def __init__(self, name=None):
+        self.name = name
+
+    def __enter__(self):
+        self.start_time = time.perf_counter()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        if self.name:
+            print(f"{self.name} completed in {round(self.duration(), 3):.3g}s")
+
+    def duration(self):
+        return time.perf_counter() - self.start_time
 
 class TestImpl(object):
     def __init__(self):
@@ -67,5 +88,23 @@ class TestImpl(object):
                 self.tests_output.append((False, f"Exception type {e}, not subclass of {excpt}"))
             return
         self.tests_output.append((False, f"No exception thrown."))
+
+    def timed(self, *a, **kw):
+        return StackedTimer(*a, **kw)
+
+    def similar(self, cmp, ref, tol=1e-10):
+        self.check_scope()
+
+        if np is None:
+            self.tests_output.append((False, "cannot check array similarity without NumPy!"))
+
+        elif np.shape(cmp) != np.shape(ref):
+            self.tests_output.append((False, f"Shapes disagree ({np.shape(cmp)} != {np.shape(ref)})"))
+
+        elif not np.allclose(cmp, ref, rtol=0., atol=tol):
+            self.tests_output.append((False, f"Values are not similar"))
+
+        else:
+            self.tests_output.append((True, "Passed"))
 
 test = TestImpl()
